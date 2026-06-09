@@ -9,10 +9,18 @@ import numpy as np
 import json, os, re
 import pandas as pd 
 from dash_auth import BasicAuth
+import boto3
 
+if not os.path.exists("../mockdata.h5ad"):
+    s3 = boto3.client('s3',
+        endpoint_url=os.environ['RAILWAY_BUCKET_ENDPOINT_URL'],
+        aws_access_key_id=os.environ['RAILWAY_BUCKET_ACCESS_KEY_ID'],
+        aws_secret_access_key=os.environ['RAILWAY_BUCKET_SECRET_ACCESS_KEY']
+    )
+    s3.download_file(os.environ['RAILWAY_BUCKET_NAME'], 'cleaned_ad.h5ad', 'cleaned_ad.h5ad')
 
 ############## define data ###############
-H5AD_FILE = "../mockdata.h5ad"
+H5AD_FILE = "mockdata.h5ad"
 
 CLUSTER_COL = "cluster"
 SUBCLUSTER_COL = "subcluster"

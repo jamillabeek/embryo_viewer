@@ -62,3 +62,4 @@ urllib3==2.7.0
 Werkzeug==3.1.8
 zarr==3.2.1
 zipp==4.1.0
+boto3
