@@ -13,11 +13,11 @@ import boto3
 
 if not os.path.exists("../mockdata.h5ad"):
     s3 = boto3.client('s3',
-        endpoint_url=os.environ['RAILWAY_BUCKET_ENDPOINT_URL'],
-        aws_access_key_id=os.environ['RAILWAY_BUCKET_ACCESS_KEY_ID'],
-        aws_secret_access_key=os.environ['RAILWAY_BUCKET_SECRET_ACCESS_KEY']
+        endpoint_url=os.environ['https://t3.storageapi.dev'],
+        aws_access_key_id=os.environ['tid_jAZXdNQUzMgAGKJBdyxpUfsMAwyvVfnDDPdvjQzJHHmtwciGFL'],
+        aws_secret_access_key=os.environ['tsec_OGI5frIs1H3ylTnsl2Wt7rU6m+VK+OaX5fpOoRN1-Nlj1fO0j1PE4D3PG1RUhZMRsfCj4g']
     )
-    s3.download_file(os.environ['RAILWAY_BUCKET_NAME'], 'cleaned_ad.h5ad', 'cleaned_ad.h5ad')
+    s3.download_file(os.environ['ample-snackbox-ozv204ht9m'], 'mockdata.h5ad', 'mockdata.h5ad')
 
 ############## define data ###############
 H5AD_FILE = "mockdata.h5ad"
