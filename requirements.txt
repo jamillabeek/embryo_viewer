@@ -22,16 +22,16 @@ Jinja2==3.1.6
 joblib==1.5.3
 kiwisolver==1.5.0
 legacy-api-wrap==1.5
-llvmlite==0.47.0
+llvmlite==0.44.0
 MarkupSafe==3.0.3
 matplotlib==3.10.9
 narwhals==2.22.1
 natsort==8.4.0
 nest-asyncio==1.6.0
 networkx==3.6.1
-numba @ file:///Users/runner/miniforge3/conda-bld/numba_1778390558785/work
+numba==0.61.2
 numcodecs==0.16.5
-numpy @ file:///Users/runner/miniforge3/conda-bld/bld/rattler-build_numpy_1779169282/work/dist/numpy-2.4.6-cp314-cp314t-macosx_11_0_x86_64.whl#sha256=ed1b686a79c721e209b45c37fa3ce5df5161ac20258dca54a0560306ad3f9b9c
+numpy==2.2.4
 packaging==26.2
 pandas==2.3.3
 patsy==1.0.2
