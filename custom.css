@@ -1,0 +1,29 @@
+/* assets/custom.css */
+
+.mesh-row, .sub-row {
+  display: grid;
+  grid-template-columns: auto 40px 20px; /* label | color | mesh */
+  column-gap: 2px;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.sub-row {
+  grid-template-columns: auto 36px 20px;
+  margin-bottom: 2px;
+}
+
+.dash-checkbox label {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 13px;
+}
+
+
+.mesh-only { display:flex; align-items:center; justify-content:center; }
+
+.mesh-only .dash-checkbox label { margin: 0 !important; padding: 0 !important; }
+.mesh-only input[type="checkbox"] { width: 16px; height: 16px; }
+
+.sub-row input[type="color"] { height: 22px; width: 46px; }
+

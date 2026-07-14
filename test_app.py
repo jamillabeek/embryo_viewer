@@ -408,7 +408,7 @@ app.layout = html.Div([
 
         # cluster controls
         html.Div(
-            [
+            *[
                 build_cluster_panel(label, clusters)
                 for label, clusters in cluster_groups.items()
             ],
