@@ -220,3 +220,4 @@ __marimo__/
 # ignore data folder
 data/
 scaffolds/
+.DS_Store
