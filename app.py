@@ -349,7 +349,7 @@ app.layout = html.Div([
                             html.P("Welcome to our interactive companion viewer for 'A single-cell spatial atlas of Carnegie stage 10 human embryogenesis', [Journal, Year]."),
                             html.P("This viewer allows for exploration of our cell clusters, subclusters and their marker genes in 3D or 2D space. You can select clusters and subclusters to display, adjust their colors, and choose up to 3 genes to visualize using the panel on the right, and you can navigate between the 3D view tab and the sections view (2D) tab. Some clusters in the 3D viewer also have surface meshes that can be toggled on or off, to approach the structure of the intact tissue. The cluster numbers correspond to supplementary table 1 in the publication."),
                             html.P("Please note that the viewer includes a large amount of data, when viewing the full dataset it may take up to a few minutes to load, please wait for the viewer to finish loading before interacting, and be a bit patient when switching tabs or making significant changes."),
-                            html.P("For more information or any issues with the viewer, please refer to the publication and the supplementary materials or contact us via xxx@xxx.nl."),
+                            html.P("For more information or any issues with the viewer, please refer to the paper and the supplementary materials or contact us via xxx@xxx.nl."),
                             ], style={
                             'flex': '1', 'padding': '40px', 'display': 'flex',
                             'flexDirection': 'column', 'justifyContent': 'center'
