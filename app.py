@@ -21,7 +21,7 @@ df_subcluster_markers = pd.read_csv(SUBCLUSTER_MARKERS_FILE)
 
 
 ############## define data ###############
-H5AD_FILE = "data/cleaned_ad_2.h5ad"
+H5AD_FILE = "data/adata.h5ad"
 
 CLUSTER_COL = "whole_leiden"
 SUBCLUSTER_COL = "sub_leiden"
@@ -31,12 +31,12 @@ X_COL = "x_centroid"
 Y_COL = "z_centroid"
 Z_COL = "y_centroid"
 
-COLORS_FILE = "colors.txt"
+COLORS_FILE = "data/colors.txt"
 COLORS_FILE_PREFIX = ""
 COLORS_FILE_CLUSTER_COLUMN = "cell cluster"
 COLORS_FILE_COLOR_COLUMN = "color code"
 
-MESH_FOLDER = "scaffolds"
+MESH_FOLDER = "data/scaffolds"
 
 PANEL_SPLIT = [{"label": "Embryo", "prefix": "e"},{"label": "Placenta", "prefix": "p"},]
 
