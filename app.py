@@ -31,6 +31,9 @@ X_COL = "x_centroid"
 Y_COL = "z_centroid"
 Z_COL = "y_centroid"
 
+X_UMAP = "UMAP1"
+Y_UMAP = "UMAP2"
+
 COLORS_FILE = "data/colors.txt"
 COLORS_FILE_PREFIX = ""
 COLORS_FILE_CLUSTER_COLUMN = "cell cluster"
@@ -375,7 +378,22 @@ app.layout = html.Div([
                             html.Label("Marker Size:", style={'fontSize': '12px'}),
                             dcc.Slider(id='size_slider', min=0.1, max=5, step=0.1, value=0.3,
                                 tooltip={"placement": "bottom", "always_visible": False}),
-                        ], style={'flex': '1', 'minWidth': '280px', 'padding': '0 20px'})
+                        ], style={'flex': '1', 'minWidth': '280px', 'padding': '0 20px'}),
+                        html.Div([
+                            html.A(
+                                "Go to DEG table",
+                                href="#marker_tables",
+                                style={
+                                    'display': 'inline-block',
+                                    'padding': '8px 16px',
+                                    'backgroundColor': '#007BFF',
+                                    'color': 'white',
+                                    'borderRadius': '6px',
+                                    'textDecoration': 'none',
+                                    'fontWeight': 'bold',
+                                }
+                            )
+                        ], style={'flex': '0 0 auto', 'alignSelf': 'flex-start', 'paddingTop': '20px'})
                     ], style={'display': 'flex', 'gap': '20px', 'marginBottom': '16px', 'alignItems': 'flex-start'}),
 
                     html.Div([
@@ -397,24 +415,101 @@ app.layout = html.Div([
                 # sections view tab
                 dcc.Tab(label='Sections View', value='tab-2', children=[
                     html.Div([
-                        html.Div([
-                            html.Label("Select Sections:"),
-                            dcc.Checklist(
-                                id='section_selector_t2',
-                                options=[{'label': str(s), 'value': s} for s in section_labels],
-                                value=section_labels,
-                                inline=True
-                            ),
-                            html.Label("Marker Size:", style={'fontSize': '12px'}),
-                            dcc.Slider(id='size_slider_t2', min=0.1, max=5, step=0.1, value=1.5,
-                                tooltip={"placement": "bottom", "always_visible": False}),
-                        ], style={'marginBottom': '12px'}),
+                        html.Div([  # <-- flex row wrapper for controls + button
+                            html.Div([
+                                html.Label("Select Sections:"),
+                                dcc.Checklist(
+                                    id='section_selector_t2',
+                                    options=[{'label': str(s), 'value': s} for s in section_labels],
+                                    value=section_labels,
+                                    inline=True
+                                ),
+                                html.Label("Marker Size:", style={'fontSize': '12px'}),
+                                dcc.Slider(id='size_slider_t2', min=0.1, max=5, step=0.1, value=1.5,
+                                    tooltip={"placement": "bottom", "always_visible": False}),
+                            ], style={'flex': '1', 'minWidth': '280px', 'padding': '0 20px'}),
 
-                        html.Div(id='section_panels', style={
-                            'display': 'grid',
-                            'gridTemplateColumns': 'repeat(5, 1fr)',
-                            'gap': '8px',
-                        }),
+                            html.Div([
+                                html.A(
+                                    "Go to DEG table",
+                                    href="#marker_tables",
+                                    style={
+                                        'display': 'inline-block',
+                                        'padding': '8px 16px',
+                                        'backgroundColor': '#007BFF',
+                                        'color': 'white',
+                                        'borderRadius': '6px',
+                                        'textDecoration': 'none',
+                                        'fontWeight': 'bold',
+                                    }
+                                )
+                            ], style={'flex': '0 0 auto', 'alignSelf': 'flex-start', 'paddingTop': '20px'}),
+                        ], style={'display': 'flex', 'gap': '20px', 'marginBottom': '16px', 'alignItems': 'flex-start'}),
+
+                        html.Div([
+                            html.Div(id='section_panels', style={
+                                'display': 'grid',
+                                'gridTemplateColumns': 'repeat(5, 1fr)',
+                                'gap': '8px',
+                            }),
+                            html.Div(id='rgb_legend_sections', style={
+                                'position': 'absolute', 'top': '40px', 'right': '10px',
+                                'zIndex': '10', 'backgroundColor': 'rgba(255,255,255,0.7)',
+                                'borderRadius': '8px', 'padding': '6px'
+                            })
+                        ], style={'position': 'relative'})
+                    ])
+                ]),
+
+                # UMAP tab
+                dcc.Tab(label='UMAPs', value='tab-3', children=[
+                    html.Div([
+                        html.Div([
+                            html.Div([
+                                html.Label("Select Sections:"),
+                                dcc.Checklist(
+                                    id='section_selector_t3',
+                                    options=[{'label': str(s), 'value': s} for s in section_labels],
+                                    value=section_labels,
+                                    inline=True
+                                ),
+                                html.Label("Marker Size:", style={'fontSize': '12px'}),
+                                dcc.Slider(id='size_slider_t3', min=0.1, max=5, step=0.1, value=1.5,
+                                    tooltip={"placement": "bottom", "always_visible": False}),
+                            ], style={'flex': '1', 'minWidth': '280px', 'padding': '0 20px'}),
+
+                            html.Div([
+                                html.A(
+                                    "Go to DEG table",
+                                    href="#marker_tables",
+                                    style={
+                                        'display': 'inline-block',
+                                        'padding': '8px 16px',
+                                        'backgroundColor': '#007BFF',
+                                        'color': 'white',
+                                        'borderRadius': '6px',
+                                        'textDecoration': 'none',
+                                        'fontWeight': 'bold',
+                                    }
+                                )
+                            ], style={'flex': '0 0 auto', 'alignSelf': 'flex-start', 'paddingTop': '20px'}),
+                        ], style={'display': 'flex', 'gap': '20px', 'marginBottom': '16px', 'alignItems': 'flex-start'}),
+
+                        html.Div([
+                            html.Div([
+                                dcc.Graph(id='placenta_umap', style={'height': '600px', 'width': '100%'})
+                            ], style={'flex': '1', 'minWidth': '0', 'marginRight': '8px'}),
+
+                        html.Div([
+                            dcc.Graph(id='embryo_umap', style={'height': '600px', 'width': '100%'}),
+                            html.Div(id='rgb_legend_umap', style={
+                                'position': 'absolute', 'top': '40px', 'right': '10px',
+                                'zIndex': '10', 'backgroundColor': 'rgba(255,255,255,0.7)',
+                                'borderRadius': '8px', 'padding': '6px'
+                            })
+                        ], style={'position': 'relative', 'flex': '1', 'minWidth': '0', 'marginLeft': '8px'})
+
+                        ], style={'display': 'flex', 'flexDirection': 'row', 'flex': '3', 'minWidth': '0'}),
                     ])
                 ]),
 
@@ -749,6 +844,73 @@ def rgb_array_to_hex(rgb):
     rgb_uint8 = (np.clip(rgb, 0, 1) * 255).astype(np.uint8)
     return ['#%02x%02x%02x' % (r, g, b) for r, g, b in rgb_uint8]
 
+def rgb_array_to_rgba(rgb):
+    return [
+        f'rgba({int(255*r)},{int(255*g)},{int(255*b)},{a:.3f})'
+        for (r, g, b), a in zip(rgb)
+    ]
+
+def cmy_to_hex(cmy, base=0.9):
+    rgb = base * (1 - np.clip(cmy, 0, 1))
+    rgb = (rgb * 255).astype(np.uint8)
+    return ['#%02x%02x%02x' % (r, g, b) for r, g, b in rgb]
+
+def cmy_legend(genes, compact=False):
+    genes = genes[:3]
+    if len(genes) < 2:
+        return None
+    colors = ['cyan', 'magenta', 'yellow']
+    d = 24 if compact else 36
+    positions = [(0, 10), (int(d * 0.61), 10), (int(d * 0.31), 0)] if compact else [(0, 10), (22, 10), (11, -4)]
+    box_w, box_h = (46, 40) if compact else (70, 60)
+    font = '10px' if compact else '12px'
+
+    circles = [
+        html.Div(style={
+            'position': 'absolute',
+            'left': f'{positions[i][0]}px',
+            'top': f'{positions[i][1]}px',
+            'width': f'{d}px',
+            'height': f'{d}px',
+            'borderRadius': '50%',
+            'backgroundColor': colors[i],
+            'mixBlendMode': 'multiply',
+        })
+        for i in range(len(genes))
+    ]
+
+    labels = [
+        html.Div([
+            html.Span(style={
+                'display': 'inline-block',
+                'width': '8px', 'height': '8px',
+                'borderRadius': '50%',
+                'backgroundColor': colors[i],
+                'border': '1px solid #999',
+                'marginRight': '4px',
+                'verticalAlign': 'middle'
+            }),
+            html.Span(gene, style={'verticalAlign': 'middle'})
+        ], style={'marginBottom': '2px', 'fontSize': font})
+        for i, gene in enumerate(genes)
+    ]
+
+    return html.Div([
+        html.Div(circles, style={
+            'position': 'relative',
+            'width': f'{box_w}px',
+            'height': f'{box_h}px',
+            'isolation': 'isolate',
+            'marginRight': '8px',
+            'flexShrink': '0'
+        }),
+        html.Div(labels)
+    ], style={
+        'display': 'flex',
+        'alignItems': 'center',
+        'padding': '4px',
+    })
+
 @cache.memoize(timeout=0)
 def _gene_vec(adata, gene):
     """Return 1-D numpy array of expression for 'gene' across all cells."""
@@ -787,15 +949,20 @@ def update_subcluster_marker_table(selected_clusters, search_genes):
 @app.callback(
     Output('cluster_3d_plot', 'figure', allow_duplicate=True),
     Output('gene_expression_plot', 'figure', allow_duplicate=True),
+    Output('placenta_umap', 'figure', allow_duplicate=True),
+    Output('embryo_umap', 'figure', allow_duplicate=True),
     Input({'type': 'cluster-color-input', 'index': ALL}, 'value'),
     Input({'type': 'subcluster-color-input', 'index': ALL}, 'value'),
     State({'type': 'cluster-color-input', 'index': ALL}, 'id'),
     State({'type': 'subcluster-color-input', 'index': ALL}, 'id'),
     State('cluster_3d_plot', 'figure'),
     State('gene_expression_plot', 'figure'),
+    State('placenta_umap', 'figure'),
+    State('embryo_umap', 'figure'),
     prevent_initial_call=True
 )
-def patch_colors(parent_colors, sub_colors, parent_ids, sub_ids, fig1_state, fig2_state):
+def patch_colors(parent_colors, sub_colors, parent_ids, sub_ids,
+                  fig1_state, fig2_state, fig3_state, fig4_state):
     color_map = {}
     for col, cid in zip(parent_colors or [], parent_ids or []):
         if cid:
@@ -804,60 +971,32 @@ def patch_colors(parent_colors, sub_colors, parent_ids, sub_ids, fig1_state, fig
         if cid:
             color_map[cid['index']] = col
 
-    patch1, patch2 = Patch(), Patch()
+    patch1, patch2, patch3, patch4 = Patch(), Patch(), Patch(), Patch()
     changed = False
 
-    for i, tr in enumerate(fig1_state['data']):
-        name = tr.get('name', '')
-        for key, color in color_map.items():
-            if name.startswith(f'{key} '):
-                patch1['data'][i]['marker']['color'] = color
-                changed = True
+    def apply_patch(fig_state, patch):
+        nonlocal changed
+        if fig_state is None:
+            return
+        for i, tr in enumerate(fig_state['data']):
+            name = tr.get('name', '')
+            for key, color in color_map.items():
+                if name.startswith(f'{key} ') or f' in {key}' in name:
+                    patch['data'][i]['marker']['color'] = color
+                    changed = True
 
-    for i, tr in enumerate(fig2_state['data']):
-        name = tr.get('name', '')
-        for key, color in color_map.items():
-            if name.startswith(f'{key} ') or f' in {key}' in name:
-                patch2['data'][i]['marker']['color'] = color
-                changed = True
+    apply_patch(fig1_state, patch1)
+    apply_patch(fig2_state, patch2)
+    apply_patch(fig3_state, patch3)
+    apply_patch(fig4_state, patch4)
 
     if not changed:
         raise PreventUpdate
-    return patch1, patch2
+    return patch1, patch2, patch3, patch4
 # ----------------------------------------
 
 
 
-# @app.callback(
-#     Output('cluster_3d_plot', 'figure'),
-#     Output('gene_expression_plot', 'figure'),
-#     Output('rgb_legend', 'children'),
-#     Input('cluster_selector', 'data'),
-#     Input('section_selector', 'value'),
-#     Input('gene_selector', 'value'),
-#     Input('gamma_slider', 'value'),
-#     Input('size_slider', 'value'),
-#     Input('mesh_opacity', 'value'),
-#     Input('z_zoom_slider', 'value'),
-#     Input({'type': 'mesh-toggle', 'index': ALL}, 'value'),
-#     Input({'type': 'subcluster-check', 'index': ALL}, 'value'),
-#     # Input({'type': 'cluster-color-input', 'index': ALL}, 'value'),
-#     # Input({'type': 'subcluster-color-input', 'index': ALL}, 'value'),
-#     State('cluster_colors_store', 'data'),
-#     State('subcluster_colors_store', 'data'),
-#     State({'type': 'mesh-toggle', 'index': ALL}, 'id'),
-#     State({'type': 'subcluster-check', 'index': ALL}, 'id'),
-#     State({'type': 'cluster-color-input', 'index': ALL}, 'id'),
-#     State({'type': 'subcluster-color-input', 'index': ALL}, 'id'),
-#     State('camera-store', 'data'),
-#     Input('tabs', 'value'),
-# )
-# def update_figures(
-#     selected_clusters, selected_sections, selected_genes,
-#     gamma, marker_size, mesh_opacity, z_zoom,
-#     mesh_values, sub_values, parent_colors, sub_colors,
-#     mesh_ids, sub_ids, parent_color_ids, sub_color_ids, camera_state, active_tab
-# ):
 @app.callback(
     Output('cluster_3d_plot', 'figure'),
     Output('gene_expression_plot', 'figure'),
@@ -1201,13 +1340,28 @@ def update_figures(
                         else:
                             norm = np.zeros_like(gv)
                         rgb[:,chan] = norm; alpha += norm
-                    alpha = np.clip(alpha / max(1,len(genes_rgb)), 0.10, 1.0)
-                    rgba = [f'rgba({int(255*r)},{int(255*g)},{int(255*b)},{a:.3f})'
-                            for (r,g,b), a in zip(rgb, alpha)]
+                    # alpha = np.clip(alpha / max(1,len(genes_rgb)), 0.10, 1.0)
+                    # rgba = [f'rgba({int(255*r)},{int(255*g)},{int(255*b)},{a:.3f})'
+                    #         for (r,g,b), a in zip(rgb, alpha)]
+                    # rgba = rgb_array_to_rgba(rgb, len(genes_rgb))
+                    # fig2.add_trace(go.Scatter3d(
+                    #     x=x_sub, y=y_sub, z=z_sub, mode='markers',
+                    #     marker=dict(size=marker_size, color=rgba), # use RGB, without alpha
+                    #     name=f"RGB in {sub}", hoverinfo="name"
+                    # ))
+                    cmy = np.zeros((N,3), dtype=float)
+                    for chan, gene in enumerate(genes_rgb):
+                        gv = gv_by_gene[gene][sub_np]
+                        if gv.size and np.nanmax(gv) > 0:
+                            gv = np.log1p(gv); gmin, gmax = float(np.nanmin(gv)), float(np.nanmax(gv))
+                            norm = ((gv - gmin) / (gmax - gmin + 1e-9)) ** gamma
+                        else:
+                            norm = np.zeros_like(gv)
+                        cmy[:,chan] = norm
                     fig2.add_trace(go.Scatter3d(
                         x=x_sub, y=y_sub, z=z_sub, mode='markers',
-                        marker=dict(size=marker_size, color=rgb), # use RGB, without alpha
-                        name=f"RGB in {sub}", hoverinfo="name"
+                        marker=dict(size=marker_size, color=cmy_to_hex(cmy)),
+                        name=f"CMY in {sub}", hoverinfo="name"
                     ))
             elif not all_child_subs:
                 N = x_arr.shape[0]
@@ -1221,13 +1375,28 @@ def update_figures(
                     else:
                         norm = np.zeros_like(gv)
                     rgb[:,chan] = norm; alpha += norm
-                alpha = np.clip(alpha / max(1,len(genes_rgb)), 0.10, 1.0)
-                rgba = [f'rgba({int(255*r)},{int(255*g)},{int(255*b)},{a:.3f})'
-                        for (r,g,b), a in zip(rgb, alpha)]
+                # alpha = np.clip(alpha / max(1,len(genes_rgb)), 0.10, 1.0)
+                # rgba = [f'rgba({int(255*r)},{int(255*g)},{int(255*b)},{a:.3f})'
+                #         for (r,g,b), a in zip(rgb, alpha)]
+                # rgba = rgb_array_to_rgba(rgb, len(genes_rgb))
+                # fig2.add_trace(go.Scatter3d(
+                #     x=x_arr, y=y_arr, z=z_arr, mode='markers',
+                #     marker=dict(size=marker_size, color=rgba),
+                #     name="RGB Expression", hoverinfo="name"
+                # ))
+                cmy = np.zeros((N,3), dtype=float)
+                for chan, gene in enumerate(genes_rgb):
+                    gv = gv_by_gene[gene][sub_np]
+                    if gv.size and np.nanmax(gv) > 0:
+                        gv = np.log1p(gv); gmin, gmax = float(np.nanmin(gv)), float(np.nanmax(gv))
+                        norm = ((gv - gmin) / (gmax - gmin + 1e-9)) ** gamma
+                    else:
+                        norm = np.zeros_like(gv)
+                    cmy[:,chan] = norm
                 fig2.add_trace(go.Scatter3d(
-                    x=x_arr, y=y_arr, z=z_arr, mode='markers',
-                    marker=dict(size=marker_size, color=rgba),
-                    name="RGB Expression", hoverinfo="name"
+                    x=x_sub, y=y_sub, z=z_sub, mode='markers',
+                    marker=dict(size=marker_size, color=cmy_to_hex(cmy)),
+                    name=f"CMY in {sub}", hoverinfo="name"
                 ))
                 
     fig2.update_layout(
@@ -1241,100 +1410,12 @@ def update_figures(
         showlegend=False,
         uirevision='constant'
     )
-    #if camera_state:
-    #    fig2.update_layout(scene_camera=camera_state)
 
-
-    # RGB legend
-    # if len(selected_genes) > 1:
-    #     color_names = ['Red','Green','Blue']
-    #     items = []
-    #     for i, gene in enumerate(selected_genes[:3]):
-    #         items.append(html.Span([
-    #             html.Span(style={'display':'inline-block','width':'16px','height':'16px',
-    #                              'backgroundColor': color_names[i].lower(),'marginRight':'8px'}),
-    #             f"{color_names[i]}: {gene}"
-    #         ], style={'marginRight':'16px'}))
-    #     rgb_legend = html.Div([html.Strong("RGB mapping: "), *items])
-    # else:
-    #     rgb_legend = ""
     if len(selected_genes) > 1:
         genes_rgb = selected_genes[:3]
-        colors = ['red', 'green', 'blue']
-        
-        positions = [
-            {'left': '0px',  'top': '10px'},   # red
-            {'left': '22px', 'top': '10px'},   # green
-            {'left': '11px', 'top': '-4px'},   # blue (above, centered)
-        ]
 
-        circles = []
-        for i, gene in enumerate(genes_rgb):
-            circles.append(
-                html.Div(
-                    gene,
-                    style={
-                        'position': 'absolute',
-                        'left': positions[i]['left'],
-                        'top': positions[i]['top'],
-                        'width': '36px',
-                        'height': '36px',
-                        'borderRadius': '50%',
-                        'backgroundColor': colors[i],
-                        'opacity': '0.55',
-                        'display': 'flex',
-                        'alignItems': 'center',
-                        'justifyContent': 'center',
-                        'fontSize': '8px',
-                        'color': 'white',
-                        'fontWeight': 'bold',
-                        'textAlign': 'center',
-                        'lineHeight': '1.1',
-                        'padding': '2px',
-                        'boxSizing': 'border-box',
-                    }
-                )
-            )
+        rgb_legend = cmy_legend(genes_rgb, compact=True)
 
-        # Labels next to the venn
-        labels = []
-        for i, gene in enumerate(genes_rgb):
-            labels.append(
-                html.Div([
-                    html.Span(style={
-                        'display': 'inline-block',
-                        'width': '10px', 'height': '10px',
-                        'borderRadius': '50%',
-                        'backgroundColor': colors[i],
-                        'marginRight': '5px',
-                        'verticalAlign': 'middle'
-                    }),
-                    html.Span(gene, style={'verticalAlign': 'middle'})
-                ], style={'marginBottom': '3px', 'fontSize': '12px'})
-            )
-
-        rgb_legend = html.Div([
-            html.Div(
-                circles,
-                style={
-                    'position': 'relative',
-                    'width': '70px',
-                    'height': '60px',
-                    'display': 'inline-block',
-                    'verticalAlign': 'middle',
-                    'marginRight': '16px'
-                }
-            ),
-            html.Div(labels, style={
-                'display': 'inline-block',
-                'verticalAlign': 'middle'
-            })
-        ], style={
-            'display': 'flex',
-            'alignItems': 'center',
-            'justifyContent': 'center',
-            'paddingTop': '8px'
-        })
     else:
         rgb_legend = ""
     if gene_only_change:
@@ -1346,6 +1427,7 @@ def update_figures(
 @app.callback(
     Output('section_panels', 'children'),
     Output('section_panels', 'style'),
+    Output('rgb_legend_sections', 'children'),
     Input('tabs', 'value'),
     Input('cluster_selector', 'data'),
     Input('section_selector_t2', 'value'),
@@ -1477,11 +1559,12 @@ def update_section_panels(active_tab, selected_clusters, selected_sections,
                             x=x_arr, y=y_arr,
                             mode='markers',
                             marker=dict(size=marker_size, color=norm,
-                                        colorscale='Viridis', cmin=0, cmax=1, opacity=0.9),
+                                        colorscale='Viridis', cmin=0, cmax=1),
                             name=f"{gene} expression", hoverinfo="name"
                         ))
                 continue
-
+            
+            # multiple genes
             genes_rgb = [g for g in selected_genes[:3] if g in gv_norm_by_gene]
             if genes_rgb:
                 if child_subs:
@@ -1490,31 +1573,31 @@ def update_section_panels(active_tab, selected_clusters, selected_sections,
                         if sub_idx is None or len(sub_idx) == 0:
                             continue
                         N = len(sub_idx)
-                        rgb = np.zeros((N, 3), dtype=float)
+                        cmy = np.zeros((N, 3), dtype=float)
                         for chan, gene in enumerate(genes_rgb):
-                            rgb[:, chan] = gv_norm_by_gene[gene][sub_idx]
+                            cmy[:, chan] = gv_norm_by_gene[gene][sub_idx]
                         fig.add_trace(go.Scatter(
                             x=x_all[sub_idx], y=y_all[sub_idx], mode='markers',
-                            marker=dict(size=marker_size, color=rgb_array_to_hex(rgb)),
-                            name=f"RGB in {sub}", hoverinfo="name"
+                            marker=dict(size=marker_size, color=cmy_to_hex(cmy)),
+                            name=f"CMY in {sub}", hoverinfo="name"
                         ))
                 else:
                     N = len(idx)
-                    rgb = np.zeros((N, 3), dtype=float)
+                    cmy = np.zeros((N, 3), dtype=float)
                     for chan, gene in enumerate(genes_rgb):
-                        rgb[:, chan] = gv_norm_by_gene[gene][idx]
+                        cmy[:, chan] = gv_norm_by_gene[gene][idx]
                     fig.add_trace(go.Scatter(
                         x=x_arr, y=y_arr, mode='markers',
-                        marker=dict(size=marker_size, color=rgb_array_to_hex(rgb)),
-                        name="RGB Expression", hoverinfo="name"
+                        marker=dict(size=marker_size, color=cmy_to_hex(cmy)),
+                        name="CMY Expression", hoverinfo="name"
                     ))
 
         fig.update_layout(
-            xaxis=dict(visible=False, range=x_range),
+            xaxis=dict(visible=False, range=x_range, scaleanchor='y', scaleratio=1),
             yaxis=dict(visible=False, range=y_range),
             margin=dict(l=0, r=0, b=20, t=20),
             showlegend=False,
-            title=dict(text=f"Section {section}", x=0.5),
+            title=dict(text=f"Section {section}", x=0.5, y=0.95, xanchor='center', yanchor='top'),
             uirevision=str(section)
         )
 
@@ -1534,9 +1617,197 @@ def update_section_panels(active_tab, selected_clusters, selected_sections,
         dcc.Graph(figure=fig, style={'height': f'{panel_height}px'}, config={'displayModeBar': False})
         for fig in figs
     ]
-    return panels, grid_style
 
 
+    legend = cmy_legend(selected_genes, compact=n > 2)
+
+    return panels, grid_style, legend
+
+@app.callback(
+    Output('placenta_umap', 'figure'),
+    Output('embryo_umap', 'figure'),
+    Output('rgb_legend_umap', 'children'),
+    Input('cluster_selector', 'data'),
+    Input('section_selector_t3', 'value'),
+    Input('gene_selector', 'value'),
+    Input('gamma_slider', 'value'),
+    Input('size_slider_t3', 'value'),
+    Input({'type': 'subcluster-check', 'index': ALL}, 'value'),
+    Input('cluster_colors_store', 'data'),
+    Input('subcluster_colors_store', 'data'),
+    State({'type': 'subcluster-check', 'index': ALL}, 'id'),
+    Input('tabs', 'value'),
+)
+def update_umaps(
+    selected_clusters, selected_sections, selected_genes,
+    gamma, marker_size, sub_values, parent_colors, sub_colors,
+    sub_ids, active_tab
+):
+
+    if active_tab != 'tab-3':
+        raise PreventUpdate
+
+    selected_clusters = selected_clusters or []
+    selected_sections = [str(s) for s in (selected_sections or [])]
+    selected_genes = selected_genes or []
+    if isinstance(selected_genes, str):
+        selected_genes = [selected_genes]
+    selected_genes = [g for g in selected_genes if g]
+
+    live_cluster_colors = dict(parent_colors or cluster_colors)
+    live_subcluster_colors = dict(sub_colors or subcluster_colors)
+
+    selected_subs = {
+        sid['index']
+        for val, sid in zip(sub_values or [], sub_ids or [])
+        if (val and len(val) > 0)
+    }
+
+    gv_by_gene = {g: _gene_vec(mtx, g) for g in selected_genes if g in mtx.var_names}
+    gv_norm_by_gene = {}
+    for g, gv in gv_by_gene.items():
+        gv_log = np.log1p(gv)
+        gmin, gmax = float(np.nanmin(gv_log)), float(np.nanmax(gv_log))
+        gv_norm_by_gene[g] = ((gv_log - gmin) / (gmax - gmin + 1e-9)) ** gamma
+
+    sec_set = set(selected_sections) if selected_sections else set(section_labels)
+    sec_col = mtx.obs[SECTION_COL].values.astype(str)
+
+    cluster_idx_all = mtx.obs.groupby('_cl').indices
+    subcl_idx_all = mtx.obs.groupby('_subcl').indices
+    cluster_idx = {c: idx[np.isin(sec_col[idx], list(sec_set))] for c, idx in cluster_idx_all.items()}
+    subcl_idx = {c: idx[np.isin(sec_col[idx], list(sec_set))] for c, idx in subcl_idx_all.items()}
+
+    parent_to_sub = mtx.obs.groupby('_cl')['_subcl'].unique().apply(list).to_dict()
+
+    p_clusters = [c for c in selected_clusters if c.startswith('p')]
+    e_clusters = [c for c in selected_clusters if c.startswith('e')]
+
+
+
+    x_all = mtx.obs[X_UMAP].to_numpy()
+    y_all = mtx.obs[Y_UMAP].to_numpy()
+
+    def build_fig(clusters, title):
+        fig = go.Figure()
+        for cluster in clusters:
+            idx = cluster_idx.get(cluster)
+            if idx is None or len(idx) == 0:
+                continue
+
+            all_child_subs = parent_to_sub.get(cluster, [])
+            child_subs = [s for s in all_child_subs if s in selected_subs]
+
+            x_arr = x_all[idx]
+            y_arr = y_all[idx]
+
+            if len(selected_genes) == 0:
+                if child_subs:
+                    for sub in child_subs:
+                        sub_idx = subcl_idx.get(sub)
+                        if sub_idx is None or len(sub_idx) == 0:
+                            continue
+                        fig.add_trace(go.Scatter(
+                            x=x_all[sub_idx], y=y_all[sub_idx],
+                            mode='markers',
+                            marker=dict(
+                                size=marker_size,
+                                color=live_subcluster_colors.get(sub, live_cluster_colors.get(cluster, '#808080')),
+                                opacity=0.85
+                            ),
+                            name=f'{sub} cells', hoverinfo="name"
+                        ))
+                else:
+                    fig.add_trace(go.Scatter(
+                        x=x_arr, y=y_arr,
+                        mode='markers',
+                        marker=dict(
+                            size=marker_size,
+                            color=live_cluster_colors.get(cluster, '#808080'),
+                            opacity=0.85
+                        ),
+                        name=f'{cluster} cells', hoverinfo="name"
+                    ))
+                continue
+
+            if len(selected_genes) == 1:
+                gene = selected_genes[0]
+                if gene in gv_norm_by_gene:
+                    if child_subs:
+                        for sub in child_subs:
+                            sub_idx = subcl_idx.get(sub)
+                            if sub_idx is None or len(sub_idx) == 0:
+                                continue
+                            norm = gv_norm_by_gene[gene][sub_idx]
+                            fig.add_trace(go.Scatter(
+                                x=x_all[sub_idx], y=y_all[sub_idx],
+                                mode='markers',
+                                marker=dict(size=marker_size, color=norm,
+                                            colorscale='Viridis', cmin=0, cmax=1, opacity=0.9),
+                                name=f"{gene} in {sub}", hoverinfo="name"
+                            ))
+                    else:
+                        norm = gv_norm_by_gene[gene][idx]
+                        fig.add_trace(go.Scatter(
+                            x=x_arr, y=y_arr,
+                            mode='markers',
+                            marker=dict(size=marker_size, color=norm,
+                                        colorscale='Viridis', cmin=0, cmax=1, opacity=0.9),
+                            name=f"{gene} expression", hoverinfo="name"
+                        ))
+                continue
+
+            genes_rgb = [g for g in selected_genes[:3] if g in gv_norm_by_gene]
+
+            if genes_rgb:
+                if child_subs:
+                    for sub in child_subs:
+                        sub_idx = subcl_idx.get(sub)
+                        if sub_idx is None or len(sub_idx) == 0:
+                            continue
+                        N = len(sub_idx)
+                        cmy = np.zeros((N, 3), dtype=float)
+                        # rgb = np.zeros((N, 3), dtype=float)
+                        for chan, gene in enumerate(genes_rgb):
+                            cmy[:, chan] = gv_norm_by_gene[gene][sub_idx]
+                        fig.add_trace(go.Scatter(
+                            x=x_all[sub_idx], y=y_all[sub_idx], mode='markers',
+                            marker=dict(size=marker_size, color=cmy_to_hex(cmy)),
+                            name=f"CMY in {sub}", hoverinfo="name"
+                        ))
+                else:
+                    N = len(idx)
+                    rgb = np.zeros((N, 3), dtype=float)
+                    for chan, gene in enumerate(genes_rgb):
+                        cmy[:, chan] = gv_norm_by_gene[gene][idx]
+                    fig.add_trace(go.Scatter(
+                        x=x_arr, y=y_arr, mode='markers',
+                        marker=dict(size=marker_size, color=cmy_to_hex(cmy)),
+                        name="RGB Expression", hoverinfo="name"
+                    ))
+        fig.update_layout(
+            xaxis=dict(visible=False),
+            yaxis=dict(visible=False),
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            margin=dict(l=0, r=0, b=20, t=20),
+            showlegend=False,
+            title=dict(text=title, x=0.5, y=0.95, xanchor='center', yanchor='top', font=dict(size=14)),
+        )
+        return fig
+
+    fig_p = build_fig(p_clusters, "Placenta")
+    fig_e = build_fig(e_clusters, "Embryo")
+
+    if len(selected_genes) > 1:
+        genes_rgb = selected_genes[:3]
+
+        rgb_legend = cmy_legend(genes_rgb, compact=True)
+
+    else:
+        rgb_legend = ""
+
+    return fig_p, fig_e, rgb_legend
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8050))
